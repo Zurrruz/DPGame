@@ -55,17 +55,20 @@ public class Map : MonoBehaviour
     {
         foreach (var path in _notTraveledPathLeft)
         {
-            path.GetComponent<SpriteRenderer>().material = _defaultPathMaterial;
+            path.GetComponent<PathCell>().StopPS();
+            //path.GetComponent<SpriteRenderer>().material = _defaultPathMaterial;
             path.GetComponent<PathCell>()._lastHighlightedСell = false;
         }
         foreach (var path in _notTraveledPathRight)
         {
-            path.GetComponent<SpriteRenderer>().material = _defaultPathMaterial;
+            path.GetComponent<PathCell>().StopPS();
+            // path.GetComponent<SpriteRenderer>().material = _defaultPathMaterial;
             path.GetComponent<PathCell>()._lastHighlightedСell = false;
         }
         foreach (var path in _MoveSpots)
         {
-            path.GetComponent<SpriteRenderer>().material = _defaultPathMaterial;
+            path.GetComponent<PathCell>().StopPS();
+            //path.GetComponent<SpriteRenderer>().material = _defaultPathMaterial;
             path.GetComponent<PathCell>()._lastHighlightedСell = false;
         }
     }
@@ -145,7 +148,7 @@ public class Map : MonoBehaviour
 
         foreach (var path in _MoveSpots)
         {
-            if (!path.GetComponent<PathCell>().playerHere)
+            if (!path.GetComponent<PathCell>().playerHerePassed)
             {
                 _notTraveledPath.Add(path);
             }
@@ -157,8 +160,9 @@ public class Map : MonoBehaviour
 
             for (int i = 0; i < _notTraveledPath.Count; i++)
             {
-                _notTraveledPath[i].GetComponent<SpriteRenderer>().material = _pathMaterial;
-                _notTraveledPath[i].GetComponent<PathCell>().selectedCell = true;
+                // _notTraveledPath[i].GetComponent<SpriteRenderer>().material = _pathMaterial;
+                _notTraveledPath[i].GetComponent<PathCell>().StartPS();
+                 _notTraveledPath[i].GetComponent<PathCell>().selectedCell = true;
             }
           
             switch (_MoveSpots[_MoveSpots.Count - 1].GetComponent<PathCell>().numberPath)
@@ -198,8 +202,10 @@ public class Map : MonoBehaviour
             }
             for (int i = 0; i < difference; i++)
             {
-                _notTraveledPathLeft[i].GetComponent<SpriteRenderer>().material = _pathMaterial;
-                _notTraveledPathRight[i].GetComponent<SpriteRenderer>().material = _pathMaterial;
+                _notTraveledPathLeft[i].GetComponent<PathCell>().StartPS();
+                _notTraveledPathRight[i].GetComponent<PathCell>().StartPS();
+                //_notTraveledPathLeft[i].GetComponent<SpriteRenderer>().material = _pathMaterial;
+                //_notTraveledPathRight[i].GetComponent<SpriteRenderer>().material = _pathMaterial;
                 _notTraveledPathLeft[i].GetComponent<PathCell>().selectedCell = true;
                 _notTraveledPathRight[i].GetComponent<PathCell>().selectedCell = true;
                 _notTraveledPathLeft[difference - 1].GetComponent<PathCell>()._lastHighlightedСell = true;
@@ -207,12 +213,14 @@ public class Map : MonoBehaviour
             }
             for (int i = difference; i < _notTraveledPathLeft.Count; i++)
             {
-                _notTraveledPathLeft[i].GetComponent<SpriteRenderer>().material = _defaultPathMaterial;
+                _notTraveledPathLeft[i].GetComponent<PathCell>().StopPS();
+                //_notTraveledPathLeft[i].GetComponent<SpriteRenderer>().material = _defaultPathMaterial;
                 _notTraveledPathLeft[i].GetComponent<PathCell>().selectedCell = false;
             }
             for (int i = difference; i < _notTraveledPathRight.Count; i++)
-            {                
-                _notTraveledPathRight[i].GetComponent<SpriteRenderer>().material = _defaultPathMaterial;
+            {
+                _notTraveledPathRight[i].GetComponent<PathCell>().StopPS();
+                //_notTraveledPathRight[i].GetComponent<SpriteRenderer>().material = _defaultPathMaterial;
                 _notTraveledPathRight[i].GetComponent<PathCell>().selectedCell = false;
             }
         }
@@ -221,13 +229,15 @@ public class Map : MonoBehaviour
         {
             for (int i = 0; i < countOfPath; i++)
             {
-                _notTraveledPath[i].GetComponent<SpriteRenderer>().material = _pathMaterial;
+                _notTraveledPath[i].GetComponent<PathCell>().StartPS();
+                //_notTraveledPath[i].GetComponent<SpriteRenderer>().material = _pathMaterial;
                 _notTraveledPath[i].GetComponent<PathCell>().selectedCell = true;
                 _notTraveledPath[countOfPath - 1].GetComponent<PathCell>()._lastHighlightedСell = true;
             }
             for (int i = countOfPath; i < _notTraveledPath.Count; i++)
             {
-                _notTraveledPath[i].GetComponent<SpriteRenderer>().material = _defaultPathMaterial;
+                _notTraveledPath[i].GetComponent<PathCell>().StopPS();
+                //_notTraveledPath[i].GetComponent<SpriteRenderer>().material = _defaultPathMaterial;
                 _notTraveledPath[i].GetComponent<PathCell>().selectedCell = false;                
             }
         }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class GameManager : MonoBehaviour
     private int _spot;
 
     public static bool isMove;
-
+    
     [SerializeField]
     private List<Transform> _moveSpots;
     [SerializeField]

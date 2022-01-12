@@ -13,6 +13,10 @@ public class CharacterStats : MonoBehaviour
     private Text _agility;
     [SerializeField]
     private Text _intellect;
+    [SerializeField]
+    private Text _physicsDamage;
+    [SerializeField]
+    private Text _magicDamage;
 
 
     void Start()
@@ -31,5 +35,7 @@ public class CharacterStats : MonoBehaviour
         _strength.text = "" + _character.strength;
         _agility.text = "" + _character.agility;
         _intellect.text = "" + _character.intellect;
+        _physicsDamage.text = "Физический урон " + _character.physicsDamage;
+        _magicDamage.text = "Магический урон " + _character.magicDamage;
     }
 }

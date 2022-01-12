@@ -5,6 +5,15 @@ TagManager:
   serializedVersion: 2
   tags:
   - Spot
+  - Item
+  - SlotForChest
+  - Weapon
+  - BattleManager
+  - Enemy
+  - QueueManager
+  - OpenChest
+  - DebuffsManager
+  - SpelsManager
   layers:
   - Default
   - TransparentFX
@@ -13,7 +22,7 @@ TagManager:
   - Water
   - UI
   - ' Put On Item'
-  - 
+  - SlotForItem
   - 
   - 
   - 

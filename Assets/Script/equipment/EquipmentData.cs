@@ -6,14 +6,22 @@ using UnityEngine;
 public class EquipmentData : ScriptableObject
 {
     [SerializeField]
-    private string _name;
+    private string _nameItem;
+    [Header("Stats")]
     [SerializeField]
-    private float _strength;
+    private float _minStrength;
     [SerializeField]
-    private float _agility;
+    private float _maxStrength;
     [SerializeField]
-    private float _intellect;
+    private float _minAgility;
+    [SerializeField]
+    private float _maxAgility;
+    [SerializeField]
+    private float _maxIntellect;
+    [SerializeField]
+    private float _minIntellect;
 
+    [Header("Материал")]
     [SerializeField]
     private bool _platemail;
     [SerializeField]
@@ -21,6 +29,7 @@ public class EquipmentData : ScriptableObject
     [SerializeField]
     private bool _cloth;
 
+    [Header("Вид доспеха")]
     [SerializeField]
     private bool _glovers;
     [SerializeField]
@@ -30,9 +39,14 @@ public class EquipmentData : ScriptableObject
     [SerializeField]
     private bool _chest;
 
-    public float strength => this._strength;
-    public float agility => this._agility;
-    public float intellect => this._intellect;
+    public float minStrength => this._minStrength;
+    public float maxStrength => this._maxStrength;
+
+    public float minAgility => this._minAgility;
+    public float maxAgility => this._maxAgility;
+
+    public float minIntellect => this._maxIntellect;
+    public float maxIntellect => this._minIntellect;
 
     public bool platemail => this._platemail;
     public bool leather => this._leather;
@@ -42,4 +56,6 @@ public class EquipmentData : ScriptableObject
     public bool boots => this._boots;
     public bool helm => this._helm;
     public bool chest => this._chest;
+
+    public string nameItem => this._nameItem;
 }

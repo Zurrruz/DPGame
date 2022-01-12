@@ -13,14 +13,15 @@ public class Dice : MonoBehaviour, IPointerClickHandler
     public static int result;
     public int t;
 
-    private Animator _anim;
+    public static bool thereIsAMove;
+
     private SpriteRenderer _sr;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        _anim = GetComponent<Animator>();
+     
         _sr = GetComponent<SpriteRenderer>();
     }
 
@@ -32,7 +33,11 @@ public class Dice : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        StartCoroutine(Result());
+        if (!thereIsAMove)
+        {
+            StartCoroutine(Result());
+            thereIsAMove = true;
+        }
     }
 
     IEnumerator Result()
