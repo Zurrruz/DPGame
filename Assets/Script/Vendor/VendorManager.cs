@@ -38,7 +38,13 @@ public class VendorManager : MonoBehaviour
    
     public void ExitStore()
     {
+        Dice.thereIsAMove = false;
         _exitStore.SetActive(false);
         MainCameraController.inStore = false;
+    }
+
+    private void OnDestroy()
+    {
+        goToStore -= ActivateVendorButton;
     }
 }

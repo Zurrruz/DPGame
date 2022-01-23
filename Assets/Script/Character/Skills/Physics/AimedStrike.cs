@@ -37,6 +37,7 @@ public class AimedStrike : MonoBehaviour, IPointerClickHandler
         {
             SpelsManager.spelIsActive = true;
             SpelsManager.aimedStrike = true;
+            _cooldownSpells._isActive = true;
         }
     }
 }

@@ -17,6 +17,6 @@ public class InfoCharacter : MonoBehaviour
 
     void Update()
     {
-        _heals.text = character._heals + " / 50";
+        _heals.text = character._heals + "";
     }
 }

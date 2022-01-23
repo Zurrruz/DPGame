@@ -5,7 +5,7 @@ using UnityEngine;
 public class SpelsManager : MonoBehaviour
 {
     public delegate void CooldownTimerSpells();
-    public static event CooldownTimerSpells cooldownTimerSpells;
+    public static event CooldownTimerSpells cooldownTimerSpells;    
 
     [SerializeField]
     private Transform[] _spellPosition;
@@ -41,6 +41,10 @@ public class SpelsManager : MonoBehaviour
     {
         ClicUpSpells.upSpell += UpSpell;
     }
+    private void OnDestroy()
+    {
+        ClicUpSpells.upSpell -= UpSpell;
+    }
 
     private void UpSpell(GameObject spell)
     {
@@ -57,6 +61,7 @@ public class SpelsManager : MonoBehaviour
 
     public static void EffectActiveFalse()
     {
+        aimedStrike = false;
         sweepingBlow = false;
         furiousBlow = false;
         furiousTwo = false;
@@ -208,8 +213,6 @@ public class SpelsManager : MonoBehaviour
             else
                 break;
         }
-        
-        
         yield return null;
     }
    

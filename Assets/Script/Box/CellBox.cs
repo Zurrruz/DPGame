@@ -23,6 +23,10 @@ public class CellBox : MonoBehaviour
     {
         OpenBox.addItemWeaponInBox += AddItemWeaponInChest;
     }
+    private void OnDestroy()
+    {
+        OpenBox.addItemWeaponInBox -= AddItemWeaponInChest;
+    }
 
     public void AddItemWeaponInChest()
     {

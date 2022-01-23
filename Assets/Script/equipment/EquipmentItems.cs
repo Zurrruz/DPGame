@@ -37,6 +37,12 @@ public class EquipmentItems : MonoBehaviour, IPointerClickHandler, IPointerExitH
         Puton.deleteItem += DeleteItemFromBag;
     }
 
+    private void OnDestroy()
+    {
+        Puton.putOnItem -= PutOnItem;
+        Puton.deleteItem -= DeleteItemFromBag;
+    }
+
     void Start()
     {
         putOn = false;
@@ -54,7 +60,7 @@ public class EquipmentItems : MonoBehaviour, IPointerClickHandler, IPointerExitH
     public void OnPointerClick(PointerEventData eventData)
     {
         po.itemWeapon = 1;
-        po.InfoItem(_name, strength, agility, intellect);
+        po.InfoItem(_name, strength, agility, intellect, putOn);
         _onPointerClick = true;
         _slotbag = slotInBag;
         kindOfItem = koi;

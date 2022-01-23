@@ -28,13 +28,16 @@ public class BattleManager : MonoBehaviour
     public List<GameObject> enemy;
     [SerializeField]
     private List<Transform> _spawnEnemy;
-    private int _countEnemy;
+    public int _countEnemy;
 
     public List<GameObject> listEnemy;
     public List<QueueAttack> actualQueueAttack;
 
     public delegate void AddEnemy();
     public static event AddEnemy addEnemy;
+
+    public delegate void ResetCooldownSpell();
+    public static event ResetCooldownSpell resetCooldownSpell;
 
     private void Start()
     {
@@ -80,7 +83,7 @@ public class BattleManager : MonoBehaviour
                 {
                     actualQueueAttack[0].GetComponent<Enemy>().ActionEnemy();
                     Debug.Log("Ход противника");
-                    yield return new WaitForSeconds(1f);
+                    yield return new WaitForSeconds(1.5f);
                 }
             }
             else
@@ -156,5 +159,12 @@ public class BattleManager : MonoBehaviour
             _takeItemButton.SetActive(true);
             _canvasInfoArena.SetActive(false);
         }
+        QueueAttack();
+        queueManager.QueueAttack();
+    }
+
+    public void ResetCooldown()
+    {
+        resetCooldownSpell();
     }
 }

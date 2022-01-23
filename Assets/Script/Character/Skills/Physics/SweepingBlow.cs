@@ -24,15 +24,19 @@ public class SweepingBlow : MonoBehaviour, IPointerClickHandler
             StartCoroutine(Spels());
             BattleManager.physicsDamage = true;
             BattleManager.magicDamage = false;
-
-            if (Character.isActive)
-                SpelsManager.spelIsActive = true;
+                        
         }
     }
 
     IEnumerator Spels()
     {
         yield return new WaitForSeconds(0.1f);
-        SpelsManager.sweepingBlow = true;
+        if (Character.isActive)
+        {
+            SpelsManager.spelIsActive = true;
+            yield return new WaitForSeconds(0.1f);
+            SpelsManager.sweepingBlow = true;
+            _cooldownSpells._isActive = true;
+        }
     }
 }

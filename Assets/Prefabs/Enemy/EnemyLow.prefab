@@ -242,7 +242,7 @@ MonoBehaviour:
   - {fileID: 8709620806407143080, guid: 56fd213792b0c7a4f8d7496dc39a610b, type: 3}
   - {fileID: 1659149106697153040, guid: 96a23fdc0e4a12145b244ced6c03bd3d, type: 3}
   _thereIsCharacter: 0
-  _countEnemy: 3
+  _countEnemy: 1
   _rewardLow: 1
   _rewardMedium: 0
   _rewardHard: 0

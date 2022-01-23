@@ -14,6 +14,7 @@ public class CooldownSpells : MonoBehaviour
     {
         Character.cooldownTimer += Cooldown;
         SpelsManager.cooldownTimerSpells += IsActive;
+        BattleManager.resetCooldownSpell += ResetCooldown;
     }
 
     private void Cooldown()
@@ -22,6 +23,9 @@ public class CooldownSpells : MonoBehaviour
             _cooldownTimer = _cooldown;
         else
             _cooldownTimer--;
+
+        if (_cooldownTimer <= 0)
+            GetComponent<ChoiceSpell>().Active();
     }
     private void IsActive()
     {
@@ -31,5 +35,19 @@ public class CooldownSpells : MonoBehaviour
     public float CooldownTimer()
     {
         return _cooldownTimer;
+    }
+
+    private void ResetCooldown()
+    {
+        _cooldownTimer = 0;
+        SpelsManager.combo = 0;
+        GetComponent<ChoiceSpell>().Active();
+    }
+
+    private void OnDestroy()
+    {
+        Character.cooldownTimer -= Cooldown;
+        SpelsManager.cooldownTimerSpells -= IsActive;
+        BattleManager.resetCooldownSpell -= ResetCooldown;
     }
 }

@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 7408112407470636654}
   - component: {fileID: 7408112407470636625}
   - component: {fileID: 7408112407470636624}
+  - component: {fileID: 201655847394508911}
+  - component: {fileID: 6070240735615236292}
   m_Layer: 0
   m_Name: LightningBolt
   m_TagString: Untagged
@@ -73,9 +75,9 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 4
+  m_SortingOrder: 8
   m_Sprite: {fileID: 21300000, guid: dbe6f37e950b2db4599be80d656b8985, type: 3}
-  m_Color: {r: 0.6556604, g: 1, b: 0.96149236, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -141,3 +143,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cooldown: 2
   _isActive: 0
+--- !u!114 &201655847394508911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7408112407470636626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7c1827bc90691448aa1785292934596, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isActive: 0
+--- !u!114 &6070240735615236292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7408112407470636626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e6f1155065c4e243b7a92dcbf4f9c0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _name: "\u042D\u043B\u0435\u043A\u0442\u0440\u0438\u0447\u0435\u0441\u043A\u0438\u0439
+    \u0448\u0430\u0440"
+  _discription: "*\u041A\u0414-2*. \u041D\u0430\u043D\u043E\u0441\u0438\u0442 \u0446\u0435\u043B\u0438
+    4 \u0443\u0440\u043E\u043D\u0430+\u0438\u043D\u0442\u0435\u043B\u043B\u0435\u043A\u0442.
+    \u0421\u0442\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0435 \u044D\u043B\u0435\u043A\u0442\u0440\u0438\u0447\u0435\u0441\u0442\u0432\u043E
+    4. \u0422\u0430\u043A \u0436\u0435 \u043D\u0430\u043D\u043E\u0441\u0438\u0442
+    \u0434\u0432\u0443\u043C \u0441\u043E\u0441\u0435\u0434\u043D\u0438\u043C \u0446\u0435\u043B\u044F\u043C
+    2 \u0443\u0440\u043E\u043D\u0430."
+  _startTimer: 1

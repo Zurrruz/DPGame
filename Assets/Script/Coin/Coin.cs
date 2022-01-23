@@ -11,6 +11,10 @@ public class Coin : MonoBehaviour
     {
         CoinManager.destroyCoin += DestroyCoin;
     }
+    private void OnDestroy()
+    {
+        CoinManager.destroyCoin -= DestroyCoin;
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -24,8 +28,7 @@ public class Coin : MonoBehaviour
     private void DestroyCoin()
     {
         if (transform.parent.gameObject.GetComponent<PathCell>().playerHere)
-        {
-            CoinManager.destroyCoin -= DestroyCoin;
+        {            
             Destroy(gameObject, 0.5f);
         }
     }

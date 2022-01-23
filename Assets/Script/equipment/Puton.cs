@@ -7,6 +7,10 @@ public class Puton : MonoBehaviour
 {
     [SerializeField]
     private GameObject _menuPutOn;
+    [SerializeField]
+    private GameObject _putOnButton;
+    [SerializeField]
+    private GameObject _deleteButton;
 
     [SerializeField]
     private Text _nameItem;
@@ -43,10 +47,20 @@ public class Puton : MonoBehaviour
             _menuPutOn.SetActive(false);
     }
 
-    public void InfoItem(string name, float st, float ag, float intel)
+    public void InfoItem(string name, float st, float ag, float intel, bool putOn)
     {
         _ItemOnPointer = true;
         _menuPutOn.SetActive(true);
+        if(putOn)
+        {
+            _putOnButton.SetActive(false);
+            _deleteButton.SetActive(false);
+        }
+        else
+        {
+            _putOnButton.SetActive(true);
+            _deleteButton.SetActive(true);
+        }
         _menuPutOn.transform.position = Input.mousePosition;
         _nameItem.text = name;
         _strengthItem.text = "Сила " + st;

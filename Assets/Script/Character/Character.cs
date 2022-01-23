@@ -36,6 +36,10 @@ public class Character : MonoBehaviour
     [SerializeField]
     private float _resist;
 
+    [SerializeField]
+    private GameObject _gameOverBox;
+
+    private SpriteRenderer _sr;
     private QueueAttack queueAttack;
     private QueueManager _queueManager;
 
@@ -51,6 +55,7 @@ public class Character : MonoBehaviour
     }
     private void Start()
     {
+        _sr = GetComponent<SpriteRenderer>();
         _queueManager._queueAttacks.Add(queueAttack);
         battleManager.actualQueueAttack.Add(queueAttack);
         _initiative = basicinitiative;
@@ -58,11 +63,7 @@ public class Character : MonoBehaviour
         physicsDamage = basePDamage;
         magicDamage = baseMDamage;
         magicEffectDamage = baseMDamage;
-    }
-
-    private void Update()
-    {
-        
+        _gameOverBox.SetActive(false);
     }
 
     public void Stats()
@@ -90,18 +91,29 @@ public class Character : MonoBehaviour
         if(d > _dodge)
         {
             _heals -= pDamage;
+            StartCoroutine(TakingDamageVisualization());
         }
         else
         {
             Debug.Log("Вы улонились от атаки");
         }
+        if(_heals <= 0)
+        {
+            _gameOverBox.SetActive(true);
+        }
     }
     public void TakingMagicDamage(float mDamage)
     {
         _heals -= mDamage;
+        StartCoroutine(TakingDamageVisualization());
+        if (_heals <= 0)
+        {
+            _gameOverBox.SetActive(true);
+
+        }
     }
 
-    public float DealtDamageEnemy()
+        public float DealtDamageEnemy()
     {
         if (BattleManager.physicsDamage)
         {
@@ -128,5 +140,12 @@ public class Character : MonoBehaviour
         //battleManager.QueueAttack();
         cooldownTimer();
         return _damageDealt;
+    }
+
+    IEnumerator TakingDamageVisualization()
+    {
+        _sr.color = new Color(0.8f, 0f, 0f);
+        yield return new WaitForSeconds(0.1f);
+        _sr.color = new Color(1f, 1f, 1f);
     }
 }

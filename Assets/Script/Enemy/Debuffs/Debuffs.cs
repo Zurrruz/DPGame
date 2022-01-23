@@ -72,6 +72,10 @@ public class Debuffs : MonoBehaviour, IPointerClickHandler
         _weakening = Mathf.Floor(_weakening / 2);
         _enemy._pDamage += _weakening;
     }
+    public float WeakeningDebuf()
+    {
+        return _weakening;
+    }
 
     private void Scorch()
     {
@@ -80,6 +84,10 @@ public class Debuffs : MonoBehaviour, IPointerClickHandler
             _scorch -= 2;
         else
             _scorch = 0;
+    }
+    public float ScorchDebuf()
+    {
+        return _scorch;
     }
     
     public void Frostbite()
@@ -103,6 +111,10 @@ public class Debuffs : MonoBehaviour, IPointerClickHandler
             _frostbiteAuditMax = false;
             _enemy.UnFrostbite();
         }
+    }
+    public float FrostbiteDebuf()
+    {
+        return _frostbite;
     }
 
     public void Electricity()

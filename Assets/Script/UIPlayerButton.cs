@@ -10,7 +10,11 @@ public class UIPlayerButton : MonoBehaviour
     private GameObject _chooseItem;
     [SerializeField]
     private GameObject _fightInTheArena;
-    
+    [SerializeField]
+    private GameObject _StartFight;
+    [SerializeField]
+    private GameObject _pauseMenu;
+    private bool _pause;
 
     private void Start()
     {
@@ -18,6 +22,7 @@ public class UIPlayerButton : MonoBehaviour
         PathCell.fightInTheArena += FightInTheArena;
         _chooseItem.SetActive(false);
         _fightInTheArena.SetActive(false);
+        _StartFight.SetActive(false);
     }
 
     private void OpenBox()
@@ -60,7 +65,7 @@ public class UIPlayerButton : MonoBehaviour
             _chooseItem.SetActive(false);
     }
 
-    public void  FalseActiveOpenBoxButton()
+    public void FalseActiveOpenBoxButton()
     {
         _openBox.SetActive(false);
     }
@@ -69,4 +74,32 @@ public class UIPlayerButton : MonoBehaviour
         _fightInTheArena.SetActive(false);
     }    
     
+    public void StartFightActiveTrue()
+    {
+        _StartFight.SetActive(true);
+    }
+    public void StartFightActiveFalse()
+    {
+        _StartFight.SetActive(false);
+    }
+
+    private void OnDestroy()
+    {
+        PathCell.playerOnTheChest -= OpenBox;
+        PathCell.fightInTheArena -= FightInTheArena;
+    }
+
+    public void PauseOnOff()
+    {
+        if(!_pause)
+        {
+            _pauseMenu.SetActive(true);
+            _pause = true;
+        }
+        else if(_pause)
+        {
+            _pauseMenu.SetActive(false);
+            _pause = false;
+        }
+    }
 }

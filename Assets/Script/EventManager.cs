@@ -23,7 +23,8 @@ public class EventManager : MonoBehaviour
 
     public static void  RenewText(string text)
     {
-        startEvent(text);
+        if (Dice.result == 0)            
+            startEvent(text);
     }
 
     private void EventText(string text)
@@ -32,5 +33,14 @@ public class EventManager : MonoBehaviour
         _eventText.text = text;
     }
 
-   
+    private void OnDestroy()
+    {
+        startEvent -= EventText;
+    }
+
+    public void EventButton()
+    {
+        _windowEventText.SetActive(false);
+        Dice.thereIsAMove = false;
+    }
 }

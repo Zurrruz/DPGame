@@ -71,4 +71,9 @@ public class QueueAttack : MonoBehaviour
     {
         _actualStepInitiative = 0;
     }
+
+    private void OnDestroy()
+    {
+        QueueManager.addStepInitiative -= AddInitiayive;
+    }
 }

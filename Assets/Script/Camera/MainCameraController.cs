@@ -32,6 +32,10 @@ public sealed class MainCameraController : MonoBehaviour
         OpenBox.cameraPlayer += PositionPlayer;
         transform.position = new Vector3(0, 2.7f, transform.position.z);
     }
+    private void OnDestroy()
+    {
+        OpenBox.cameraPlayer -= PositionPlayer;
+    }
 
     // Update is called once per frame
     void Update()

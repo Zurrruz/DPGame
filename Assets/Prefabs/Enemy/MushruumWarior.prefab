@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 1659149106697153041}
   - component: {fileID: 1659149106697153044}
   - component: {fileID: 1659149106697153045}
-  - component: {fileID: 1659149106697153046}
   - component: {fileID: 1659149106697153047}
   - component: {fileID: 3007267645586322566}
+  - component: {fileID: -6173727799346785524}
+  - component: {fileID: -4788884750620201989}
   m_Layer: 0
   m_Name: MushruumWarior
   m_TagString: Enemy
@@ -76,7 +77,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 7
   m_Sprite: {fileID: 21300000, guid: 7534f0a4d76db954a9d98e99b696f63b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -100,7 +101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e453f1d6d8dce87498dca7aeed3f53a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heals: 60
+  heals: 50
   _heals: 0
   initiative: 57
   _frostbite: 0
@@ -151,33 +152,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _increasedDamage: 1
-  addDamage: 2
-  kdAddDamage: 3
+  addDamage: 5
+  kdAddDamage: 2
   _pasiveIncreasedDamage: 1
-  _addPassiveDamage: 2
---- !u!114 &1659149106697153046
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1659149106697153040}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e11328d9c17e4b543b4ecd1842f089d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _increasedDamage: 0
-  addDamage: 0
-  kdAddDamage: 6
-  _magicShield: 0
-  _absorbDamage: 10
-  _healsActivateShield: 30
-  _shaman: 0
-  _addDamageWarior: 0
-  _addDamageMage: 0
-  kdAddDamageShaman: 0
-  _healing: 0
+  _addPassiveDamage: 5
 --- !u!114 &1659149106697153047
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -210,3 +188,42 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _frostbiteMax: 100
   _frostbiteMin: 50
+--- !u!114 &-6173727799346785524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1659149106697153040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d012924db660944a919732513021783, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _warior: 1
+  _mage: 0
+  _shaman: 0
+  _startTimer: 1.5
+--- !u!114 &-4788884750620201989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1659149106697153040}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e11328d9c17e4b543b4ecd1842f089d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _increasedDamage: 0
+  addDamage: 0
+  kdAddDamage: 0
+  _magicShield: 0
+  _absorbDamage: 0
+  _healsActivateShield: 0
+  _shaman: 0
+  _addDamageWarior: 0
+  _addDamageMage: 0
+  kdAddDamageShaman: 0
+  _healing: 0

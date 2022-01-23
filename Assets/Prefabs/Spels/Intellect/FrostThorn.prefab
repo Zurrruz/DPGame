@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 1163141319897899106}
   - component: {fileID: 1163141319897899105}
   - component: {fileID: 1472239654106564772}
+  - component: {fileID: -5272046354058025041}
+  - component: {fileID: 7589045494523438894}
   m_Layer: 0
   m_Name: FrostThorn
   m_TagString: Untagged
@@ -73,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 4
+  m_SortingOrder: 8
   m_Sprite: {fileID: 21300000, guid: 50a820d3228a2bf4da98a6e769e90f12, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -140,3 +142,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cooldown: 2
   _isActive: 0
+--- !u!114 &-5272046354058025041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1163141319897899104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7c1827bc90691448aa1785292934596, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isActive: 0
+--- !u!114 &7589045494523438894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1163141319897899104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e6f1155065c4e243b7a92dcbf4f9c0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _name: "\u041B\u0435\u0434\u044F\u043D\u043E\u0439 \u0448\u0438\u043F"
+  _discription: "*\u041A\u0414-2*. \u041D\u0430\u043D\u043E\u0441\u0438\u0442 \u043F\u0440\u043E\u0442\u0438\u0432\u043D\u0438\u043A\u0443
+    3 \u0435\u0434\u0438\u043D\u0438\u0446\u044B \u0443\u0440\u043E\u043D\u0430 +\u0438\u043D\u0442\u0435\u043B\u0435\u043A\u0442.
+    \u041E\u0431\u043C\u043E\u0440\u043E\u0436\u0435\u043D\u0438\u0435 10"
+  _startTimer: 1

@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 7396764727816857518}
   - component: {fileID: 7396764727816857507}
   - component: {fileID: 7128259918216974184}
+  - component: {fileID: 9217056413661070337}
+  - component: {fileID: 6939107733875298054}
   m_Layer: 0
   m_Name: ElectricalDischarge
   m_TagString: Untagged
@@ -73,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 4
+  m_SortingOrder: 8
   m_Sprite: {fileID: 21300000, guid: dbe6f37e950b2db4599be80d656b8985, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -141,3 +143,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cooldown: 2
   _isActive: 0
+--- !u!114 &9217056413661070337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7396764727816857516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7c1827bc90691448aa1785292934596, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isActive: 0
+--- !u!114 &6939107733875298054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7396764727816857516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e6f1155065c4e243b7a92dcbf4f9c0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _name: "\u042D\u043B\u0435\u043A\u0442\u0440\u0438\u0447\u0435\u0441\u043A\u0438\u0439
+    \u0440\u0430\u0437\u0440\u044F\u0434"
+  _discription: "*\u041A\u0414-1*. \u041D\u0430\u043D\u043E\u0441\u0438\u0442 \u0446\u0435\u043B\u0438
+    3 \u0443\u0440\u043E\u043D\u0430 +\u0438\u043D\u0442\u0435\u043B\u043B\u0435\u043A\u0442.
+    \u0421\u0442\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0435 \u044D\u043B\u0435\u043A\u0442\u0440\u0438\u0447\u0435\u0441\u0442\u0432\u043E
+    3"
+  _startTimer: 1

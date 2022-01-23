@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour, IPointerClickHandler
 {
     private SpelsManager _spelsManager;
     private BattleManager battleManager;
+    private SpriteRenderer _sr;
     private Debuffs _debuffs;
     private Character character;
     [Header("Характеристики")]
@@ -47,6 +48,7 @@ public class Enemy : MonoBehaviour, IPointerClickHandler
 
     private void Awake()
     {
+        _sr = GetComponent<SpriteRenderer>();
         _debuffs = GetComponent<Debuffs>();
         _spelsManager = GameObject.FindGameObjectWithTag("SpelsManager").GetComponent<SpelsManager>();
         _queueManager = GameObject.FindGameObjectWithTag("QueueManager").GetComponent<QueueManager>();
@@ -81,15 +83,17 @@ public class Enemy : MonoBehaviour, IPointerClickHandler
         if (_magicShield > 0)
         {
             _magicShield -= character.DealtDamageEnemy();
-            if (_magicShield > 0) return;
+            if (_magicShield < 0)
             {
                 _heals += _magicShield;
                 _magicShield = 0;
+                StartCoroutine(TakingDamageVisualization());
             }
         }
         else
         {
             _heals -= character.DealtDamageEnemy();
+            StartCoroutine(TakingDamageVisualization());
         }
         _spelsManager.Masseffect();
         isTarget = false;
@@ -123,8 +127,22 @@ public class Enemy : MonoBehaviour, IPointerClickHandler
         else
         {
             _heals -= damage;
+            if(damage > 0)
+                StartCoroutine(TakingDamageVisualization());
         }
         Dead();
+    }
+    IEnumerator TakingDamageVisualization()
+    {
+        _sr.color = new Color(0.8f, 0f, 0f);
+        yield return new WaitForSeconds(0.1f);
+        _sr.color = new Color(1f, 1f, 1f);
+    }
+    IEnumerator DamageVisualization()
+    {
+        _sr.color = new Color(0.3f, 1f, 0.5f);
+        yield return new WaitForSeconds(0.1f);
+        _sr.color = new Color(1f, 1f, 1f);
     }
 
     public void Frostbite(float f)
@@ -158,8 +176,11 @@ public class Enemy : MonoBehaviour, IPointerClickHandler
                 character.TakingPhysicsDamage(_mDamage);
             }
         }
+        StartCoroutine(DamageVisualization());
+        yield return new WaitForSeconds(1f);
         _debuffs.DebufEffect();
         _frostbite = false;
+        yield return new WaitForSeconds(0.5f);
         _queueManager.QueueAttack();
     }   
 
@@ -172,5 +193,11 @@ public class Enemy : MonoBehaviour, IPointerClickHandler
             battleManager.DeadEnemy();
             Destroy(gameObject, 0.5f);
         }
+    }
+    private void OnDestroy()
+    {
+        battleManager.listEnemy.Remove(gameObject);
+        battleManager.actualQueueAttack.Remove(_queueAttack);
+        _queueManager._queueAttacks.Remove(_queueAttack);
     }
 }

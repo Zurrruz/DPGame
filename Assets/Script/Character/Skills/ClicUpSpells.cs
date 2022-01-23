@@ -58,6 +58,7 @@ public class ClicUpSpells : MonoBehaviour, IPointerClickHandler, IPointerEnterHa
 
     private void DestroySpell()
     {
+        //transform.GetChild(1).GetComponent<ChoiceSpell>().DestroySpell();
         ChooseNotChoose.choose -= NotChoose;
         OpenBox.take -= AddSpell;
         Destroy(gameObject, 0.2f);

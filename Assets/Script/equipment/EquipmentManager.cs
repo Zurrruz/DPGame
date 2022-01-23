@@ -50,6 +50,11 @@ public class EquipmentManager : MonoBehaviour
         ClickUp.clicUpItem += AddItem;
         ClickUp.clicUpWeapon += AddWeapon;
     }
+    private void OnDestroy()
+    {
+        ClickUp.clicUpItem -= AddItem;
+        ClickUp.clicUpWeapon -= AddWeapon;
+    }
 
     private void Update()
     {

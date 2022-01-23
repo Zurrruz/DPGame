@@ -12,6 +12,13 @@ public class CharacterAttack : MonoBehaviour, IPointerClickHandler
     [SerializeField]
     private bool _magicAttack;
 
+    private ChoiceSpell _cs;
+
+    private void Start()
+    {
+        Character.cooldownTimer += Active;
+        _cs = GetComponent<ChoiceSpell>();
+    }
 
     public void OnPointerClick(PointerEventData eventData)
     {
@@ -21,15 +28,26 @@ public class CharacterAttack : MonoBehaviour, IPointerClickHandler
             {
                 BattleManager.physicsDamage = true;
                 BattleManager.magicDamage = false;
+                Character.spellsDamage = 0;
             }
             else if (_magicAttack)
             {
                 BattleManager.physicsDamage = false;
                 BattleManager.magicDamage = true;
+                Character.spellsDamage = 0;
             }
             SpelsManager.EffectActiveFalse();
             SpelsManager.spelIsActive = true;
         }
     }
 
+    private void Active()
+    {
+        _cs.Active();
+    }
+
+    private void OnDestroy()
+    {
+        Character.cooldownTimer -= Active;
+    }
 }

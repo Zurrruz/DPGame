@@ -14,11 +14,12 @@ public class ElectricSpells : MonoBehaviour, IPointerClickHandler
     [SerializeField]
     private bool _lightningBolt;
 
+
     CooldownSpells _cooldownSpells;
 
     private void Start()
     {
-        _cooldownSpells = GetComponent<CooldownSpells>();
+        _cooldownSpells = GetComponent<CooldownSpells>();        
     }
 
     public void OnPointerClick(PointerEventData eventData)

@@ -44,9 +44,14 @@ public class CoinManager : MonoBehaviour
     public void ButtonCoin()
     {
         _coin += coin;
-        _coinText.text = "Золото  " + _coin;
+        _coinText.text = "" + _coin;
         _takeCoinButton.SetActive(false);
         destroyCoin();
         Dice.thereIsAMove = false;
+    }
+
+    private void OnDestroy()
+    {
+        takeCoin -= ActiveButtonCoin;
     }
 }
