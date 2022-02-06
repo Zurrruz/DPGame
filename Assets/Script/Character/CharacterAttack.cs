@@ -38,6 +38,7 @@ public class CharacterAttack : MonoBehaviour, IPointerClickHandler
             }
             SpelsManager.EffectActiveFalse();
             SpelsManager.spelIsActive = true;
+            Character.spell = false;
         }
     }
 

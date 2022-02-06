@@ -23,7 +23,8 @@ public class FuriousBlow : MonoBehaviour, IPointerClickHandler
             Character.spellsDamage = _damage + SpelsManager.combo;
             BattleManager.physicsDamage = true;
             BattleManager.magicDamage = false;
-            StartCoroutine(Spels());            
+            StartCoroutine(Spels());
+            Character.spell = true;
         }
     }
 

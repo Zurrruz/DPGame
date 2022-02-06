@@ -12,6 +12,8 @@ public class IceSpells : MonoBehaviour, IPointerClickHandler
 
     [SerializeField]
     private bool _frostStorm;
+    [SerializeField]
+    private bool _frostThorn;
 
     CooldownSpells _cooldownSpells;
 
@@ -24,19 +26,14 @@ public class IceSpells : MonoBehaviour, IPointerClickHandler
     {
         if (_cooldownSpells.CooldownTimer() <= 0)
         {
-            SpelsManager.EffectActiveFalse();
-            if(_frostStorm)
-            {
-                Character.spellsDamage -= Character.magicEffectDamage;
-                SpelsManager.damageEffect = Character.intellectSpellDamage;
-            }
-            else
-                Character.spellsDamage = _damage;
-
+            SpelsManager.EffectActiveFalse();          
+            Character.spellsDamage = _damage;
             BattleManager.physicsDamage = false;
             BattleManager.magicDamage = true;
             SpelsManager.frostbite = _frostbite;
             StartCoroutine(Spell());
+
+            Character.spell = true;
         }
 
     }
@@ -52,6 +49,8 @@ public class IceSpells : MonoBehaviour, IPointerClickHandler
         {
             SpelsManager.frostbiteIsActive = true;
         }
-       
+
+        if (_frostThorn)
+            SpelsManager.frostThorn = true;
     }
 }

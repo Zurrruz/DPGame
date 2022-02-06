@@ -152,10 +152,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _increasedDamage: 1
-  addDamage: 5
+  addDamage: 3
   kdAddDamage: 2
   _pasiveIncreasedDamage: 1
   _addPassiveDamage: 5
+  _animBuffTimer: 0
+  _animAttacTimer: 0
+  _buffAddDamage: {fileID: 0}
 --- !u!114 &1659149106697153047
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -222,8 +225,13 @@ MonoBehaviour:
   _magicShield: 0
   _absorbDamage: 0
   _healsActivateShield: 0
+  _animBuffTimer: 0
+  _animAttacTimer: 0
+  _animHealingCasting: 0
+  _buffAddDamageParticle: {fileID: 0}
   _shaman: 0
   _addDamageWarior: 0
   _addDamageMage: 0
   kdAddDamageShaman: 0
   _healing: 0
+  _healingCast: {fileID: 0}

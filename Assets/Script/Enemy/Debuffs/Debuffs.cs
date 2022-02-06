@@ -7,6 +7,7 @@ public class Debuffs : MonoBehaviour, IPointerClickHandler
 {
     private Enemy _enemy;
     private float _weakening;
+    private float _weakeningValue;
 
     private float _scorch;
 
@@ -19,7 +20,23 @@ public class Debuffs : MonoBehaviour, IPointerClickHandler
     private bool _frostbiteAuditMax;
 
     private float _staticElectricity;
-   // public bool electrified;
+    // public bool electrified;
+    [Header("Анимация дебафов")]
+    [SerializeField]
+    GameObject _scorchAnimation;
+    [SerializeField]
+    GameObject _staticElectricityAnimation;
+    public bool _staticAnimTrue;
+    [SerializeField]
+    GameObject _frostbiteAnimationMage;
+    [SerializeField]
+    GameObject _frostbiteAnimationWarior;
+    public bool frostbiteAnimTrue;
+    [SerializeField]
+    GameObject _iceChainsWarior;
+    [SerializeField]
+    GameObject _iceChainsMage;
+
 
     private void Start()
     {
@@ -28,21 +45,26 @@ public class Debuffs : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Combo();
-        if (SpelsManager.aimedStrike)
+        if (!_enemy._isDead)
         {
-            WeakeningPhysicsDamage(SpelsManager.weakeningPhysicsDamage);
-            _weakening += SpelsManager.weakeningPhysicsDamage;
-        }
+            Combo();
+            if (SpelsManager.aimedStrike)
+            {
+                WeakeningPhysicsDamage(SpelsManager.weakeningPhysicsDamage);
+                _weakening += SpelsManager.weakeningPhysicsDamage;
+                _weakeningValue = _weakening;
+            }
 
-        if(SpelsManager.scorchIsActive)
-        {
-            _scorch += SpelsManager.scorch;
-        }
+            if (SpelsManager.scorchIsActive)
+            {
+                _scorch += SpelsManager.scorch;
+                _enemy.AnimDebuffTimer(0.5f);
+            }
 
-        if(SpelsManager.frostbiteIsActive)
-        {
-            Frostbite();
+            if (SpelsManager.frostbiteIsActive)
+            {
+                Frostbite();
+            }
         }
     }
 
@@ -57,33 +79,96 @@ public class Debuffs : MonoBehaviour, IPointerClickHandler
 
     private void WeakeningPhysicsDamage(float weakening)
     {
-        if (_enemy._pDamage <= weakening)
+        if (_enemy._warior)
         {
-            _enemy._pDamage = 0;
+            if (_enemy._pDamage < weakening)
+            {                
+                _weakening = _enemy._pDamage;
+                _weakeningValue = _enemy._pDamage;
+                _enemy._pDamage = 0;
+            }
+
+            else
+                _enemy._pDamage -= weakening;
         }
-        else
+
+        if (_enemy._mage)
         {
-            _enemy._pDamage -= weakening;
+            if (_enemy._mDamage < weakening)
+            {
+                _weakening = _enemy._mDamage;
+                _weakeningValue = _enemy._mDamage;
+                _enemy._mDamage = 0;
+            }
+            else
+                _enemy._mDamage -= weakening;
         }
     }
 
     private void Weakening()
     {
-        _weakening = Mathf.Floor(_weakening / 2);
-        _enemy._pDamage += _weakening;
+        if (_enemy._warior)
+        {
+            if (_weakeningValue > 2)
+            {
+                _weakening = Mathf.Ceil(_weakening / 2);
+                _enemy._pDamage += _weakening;
+                _weakeningValue -= _weakening;
+            }
+            else if (_weakeningValue == 2)
+            {
+                _enemy._pDamage += _weakening;
+                _weakeningValue -= _weakening;
+                _weakening = 0;
+            }
+            else if (_weakeningValue == 1)
+            {
+                _enemy._pDamage++;
+                _weakeningValue = 0;
+                _weakening = 0;
+            }
+        }
+
+        else if (_enemy._mage)
+        {
+            if (_weakeningValue > 2)
+            {
+                _weakening = Mathf.Ceil(_weakening / 2);
+                _enemy._mDamage += _weakening;
+                _weakeningValue -= _weakening;
+            }
+            else if (_weakeningValue == 2)
+            {
+                _enemy._mDamage += _weakening;
+                _weakeningValue -= _weakening;
+                _weakening = 0;
+            }
+            else if (_weakeningValue == 1)
+            {
+                _enemy._mDamage++;
+                _weakeningValue = 0;
+                _weakening = 0;
+            }
+        }
     }
     public float WeakeningDebuf()
     {
-        return _weakening;
+        return _weakeningValue;
     }
 
     private void Scorch()
     {
         _enemy.TakingDebufsDamage(_scorch);
+        if (_scorch > 0)
+            Instantiate(_scorchAnimation, transform);
+
         if (_scorch >= 2)
             _scorch -= 2;
         else
+        {
             _scorch = 0;
+            _enemy.AnimDebuffTimer(0);
+        }        
     }
     public float ScorchDebuf()
     {
@@ -93,6 +178,18 @@ public class Debuffs : MonoBehaviour, IPointerClickHandler
     public void Frostbite()
     {
         _frostbite += SpelsManager.frostbite;
+        if(!frostbiteAnimTrue)
+        {
+            if(_enemy._mage)
+            {
+                Instantiate(_frostbiteAnimationMage, transform);
+            }
+            else
+                Instantiate(_frostbiteAnimationWarior, transform);
+
+            frostbiteAnimTrue = true;
+        }
+
         if(_frostbite <= _frostbiteMin && !_frostbiteAuditMin)
         {
             _enemy.Frostbite(10f);
@@ -105,6 +202,17 @@ public class Debuffs : MonoBehaviour, IPointerClickHandler
         }
         else if(_frostbite >= _frostbiteMax)
         {
+            if (_enemy._mage && !_enemy._isDead)
+            {
+                Instantiate(_iceChainsMage, transform);
+                _enemy.AnimIdleStop();
+            }
+            else if(!_enemy._isDead)
+            {
+                Instantiate(_iceChainsWarior, transform);
+                _enemy.AnimIdleStop();
+            }
+
             _enemy._frostbite = true;
             _frostbite = 0;
             _frostbiteAuditMin = false;
@@ -117,9 +225,15 @@ public class Debuffs : MonoBehaviour, IPointerClickHandler
         return _frostbite;
     }
 
+    
     public void Electricity()
     {
         _staticElectricity += SpelsManager.staticElectricity;
+        if (!_staticAnimTrue)
+        {
+            Instantiate(_staticElectricityAnimation, transform);
+            _staticAnimTrue = true;
+        }
     }
     public float StaticElectricity()
     {

@@ -41,12 +41,15 @@ public class EquipmentManager : MonoBehaviour
     private float _infoPhysicsDamageWeapon;
     private float _infoMagicDamageWeapon;
 
-    private Character _character;
+    public static float infoPhysicsDamageWeaponDescription;
+    public static float infoMagicDamageWeaponDescription;
+
+    public Character _character;
 
 
     void Start()
     {
-        _character = GameObject.FindGameObjectWithTag("Player").GetComponent<Character>();
+        
         ClickUp.clicUpItem += AddItem;
         ClickUp.clicUpWeapon += AddWeapon;
     }
@@ -69,6 +72,9 @@ public class EquipmentManager : MonoBehaviour
         _character.physicsDamage = _character.basePDamage + _infoPhysicsDamageWeapon + _character.strength;
         _character.magicDamage = _character.baseMDamage + _infoMagicDamageWeapon + _character.intellect;        
         _character.Stats();
+
+        infoMagicDamageWeaponDescription = _infoMagicDamageWeapon;
+        infoPhysicsDamageWeaponDescription = _infoPhysicsDamageWeapon;
     }
 
     public void AddStatsFromChest(float st, float ag, float intel)

@@ -13,6 +13,8 @@ public class ElectricSpells : MonoBehaviour, IPointerClickHandler
     private float _staticElectricity;
     [SerializeField]
     private bool _lightningBolt;
+    [SerializeField]
+    private bool _electricalDischarge;
 
 
     CooldownSpells _cooldownSpells;
@@ -31,8 +33,9 @@ public class ElectricSpells : MonoBehaviour, IPointerClickHandler
             BattleManager.physicsDamage = false;
             BattleManager.magicDamage = true;
             StartCoroutine(Spell());
-            SpelsManager.staticElectricity = _staticElectricity;
+            SpelsManager.staticElectricity = _staticElectricity + Mathf.Floor(Character.intellectBonusEffectSpell / 2);
             SpelsManager.damageEffect = _damageEffect;
+            Character.spell = true;
         }
     }
     IEnumerator Spell()
@@ -43,8 +46,10 @@ public class ElectricSpells : MonoBehaviour, IPointerClickHandler
             SpelsManager.spelIsActive = true;
             _cooldownSpells._isActive = true;
             SpelsManager.electricSpell = true;
-            if(_lightningBolt)
+            if (_lightningBolt)
                 SpelsManager.lightningBolt = true;
+            else if (_electricalDischarge)
+                SpelsManager.electricalDischarge = true;
         }
     }
 }

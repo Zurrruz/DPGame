@@ -9,6 +9,10 @@ public class FireSpells : MonoBehaviour, IPointerClickHandler
     private float _damage;
     [SerializeField]
     private float _scorch;
+    [SerializeField]
+    private bool _fireBall;
+    [SerializeField]
+    private bool _fireJet;
 
     CooldownSpells _cooldownSpells;
 
@@ -25,10 +29,10 @@ public class FireSpells : MonoBehaviour, IPointerClickHandler
             Character.spellsDamage = _damage;
             BattleManager.physicsDamage = false;
             BattleManager.magicDamage = true;
-            SpelsManager.scorch = _scorch;
+            SpelsManager.scorch = _scorch + Mathf.Floor(Character.intellectBonusEffectSpell / 2);
             StartCoroutine(Spell());
 
-            
+            Character.spell = true;
         }
     }
 
@@ -40,6 +44,10 @@ public class FireSpells : MonoBehaviour, IPointerClickHandler
             SpelsManager.spelIsActive = true;
             SpelsManager.scorchIsActive = true;
             _cooldownSpells._isActive = true;
+            if (_fireBall)
+                SpelsManager.fireBall = true;
+            else if (_fireJet)
+                SpelsManager.fireJet = true;
         }
     }
     

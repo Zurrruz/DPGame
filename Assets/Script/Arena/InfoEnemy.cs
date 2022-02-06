@@ -38,21 +38,31 @@ public class InfoEnemy : MonoBehaviour
     {
         if (transform.childCount > 0)
         {
-            _healsEnemy.text = "HP " + transform.GetChild(0).GetComponent<Enemy>()._heals;
+            if (!transform.GetChild(0).GetComponent<Enemy>()._isDead)
+            {
+                _healsEnemy.text = "HP " + transform.GetChild(0).GetComponent<Enemy>()._heals;
 
-            if (transform.GetChild(0).GetComponent<Enemy>()._mage)
-            {
-                _magicShield.text = "" + transform.GetChild(0).GetComponent<Enemy>()._magicShield;
-                _damageEnemy.text = "" + transform.GetChild(0).GetComponent<Enemy>()._mDamage;
+                if (transform.GetChild(0).GetComponent<Enemy>()._mage)
+                {
+                    _magicShield.text = "" + transform.GetChild(0).GetComponent<Enemy>()._magicShield;
+                    _damageEnemy.text = "" + transform.GetChild(0).GetComponent<Enemy>()._mDamage;
+                }
+                else if (transform.GetChild(0).GetComponent<Enemy>()._warior)
+                {
+                    _damageEnemy.text = "" + transform.GetChild(0).GetComponent<Enemy>()._pDamage;
+                }
+                FrostDebuf();
+                ScorchDebuf();
+                StaticElectricityDebuf();
+                WeakeningDebuf();
             }
-            else if(transform.GetChild(0).GetComponent<Enemy>()._warior)
+            else
             {
-                _damageEnemy.text = "" + transform.GetChild(0).GetComponent<Enemy>()._pDamage;
+                _magicShield.text = "";
+                _damageEnemy.text = "";
+                _healsEnemy.text = "";
+                NoDebufs();
             }
-            FrostDebuf();
-            ScorchDebuf();
-            StaticElectricityDebuf();
-            WeakeningDebuf();
         }
         else
         {

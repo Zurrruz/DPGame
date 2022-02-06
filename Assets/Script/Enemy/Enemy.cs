@@ -19,6 +19,7 @@ public class Enemy : MonoBehaviour, IPointerClickHandler
     public float initiative;
     private float _frostInitiative;
     public bool _frostbite;
+    public List<GameObject> _debufsAnimation;
 
     [Header("Специализация")]
     [SerializeField]
@@ -44,7 +45,16 @@ public class Enemy : MonoBehaviour, IPointerClickHandler
     private QueueAttack _queueAttack;
     private QueueManager _queueManager;
 
+    private Animator _anim;
+    private float _animBufftimer;
+    private float _animAttackTimer;
+    private float _animDebuffTimer;
+
     public bool isTarget;
+    public bool _isDead;
+
+    public delegate void AnimationSpells();
+    public static event AnimationSpells animationSpells;
 
     private void Awake()
     {
@@ -63,23 +73,34 @@ public class Enemy : MonoBehaviour, IPointerClickHandler
 
     void Start()
     {
+        _anim = GetComponent<Animator>();
         _frostInitiative = initiative;
         _heals = heals;
         battleManager.listEnemy.Add(gameObject);
         battleManager.actualQueueAttack.Add(_queueAttack);
         _queueManager._queueAttacks.Add(_queueAttack);
+        if (_warior)
+            _animAttackTimer = _physicsSpels.AnimAttackTimer();
+        else if(_mage)
+            _animAttackTimer = _magicSpels.AnimAttackTimer();
+
+        BattleManager.destroyEnemy += Destroy;
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (Character.isActive && SpelsManager.spelIsActive)
-        {
+        if (Character.isActive && SpelsManager.spelIsActive && !_isDead)
+        {           
             isTarget = true;
-            TakingDamage();            
+            animationSpells();
+            StartCoroutine(TakingDamage());
+            character.AnimationAttackOn();
         }
     }
-    private void TakingDamage()
+    IEnumerator TakingDamage()
     {
+        yield return new WaitForSeconds(_spelsManager.TimFlySpell());
+
         if (_magicShield > 0)
         {
             _magicShield -= character.DealtDamageEnemy();
@@ -95,13 +116,18 @@ public class Enemy : MonoBehaviour, IPointerClickHandler
             _heals -= character.DealtDamageEnemy();
             StartCoroutine(TakingDamageVisualization());
         }
-        _spelsManager.Masseffect();
+        Dead();
+        _spelsManager.Masseffect();        
         isTarget = false;
         Character.isActive = false;
         StartCoroutine(SpelIsNotActive());
-        _queueManager.QueueAttack();
-        battleManager.QueueAttack();
-        Dead();
+        yield return new WaitForSeconds(0.2f);
+        if (_heals > 0)
+        {
+            _queueManager.QueueAttack();
+            battleManager.QueueAttack();
+        }
+        
     }
     IEnumerator SpelIsNotActive()
     {
@@ -130,19 +156,29 @@ public class Enemy : MonoBehaviour, IPointerClickHandler
             if(damage > 0)
                 StartCoroutine(TakingDamageVisualization());
         }
-        Dead();
+        if(!_isDead)
+            Dead();
     }
-    IEnumerator TakingDamageVisualization()
+     IEnumerator TakingDamageVisualization()
     {
-        _sr.color = new Color(0.8f, 0f, 0f);
-        yield return new WaitForSeconds(0.1f);
-        _sr.color = new Color(1f, 1f, 1f);
+        _anim.SetBool("TakingDamage", true);
+        yield return new WaitForSeconds(0.9f);
+        _anim.SetBool("TakingDamage", false);
     }
-    IEnumerator DamageVisualization()
+     IEnumerator DamageVisualization()
     {
-        _sr.color = new Color(0.3f, 1f, 0.5f);
-        yield return new WaitForSeconds(0.1f);
-        _sr.color = new Color(1f, 1f, 1f);
+        if (_physicsD)
+        {
+            _anim.SetBool("Attack", true);
+            yield return new WaitForSeconds(_animAttackTimer);
+            _anim.SetBool("Attack", false);
+        }
+        else if(!_magicSpels.IsShaman())
+        {
+            _anim.SetBool("Attack", true);
+            yield return new WaitForSeconds(_animAttackTimer);
+            _anim.SetBool("Attack", false);
+        }
     }
 
     public void Frostbite(float f)
@@ -154,6 +190,7 @@ public class Enemy : MonoBehaviour, IPointerClickHandler
         initiative = _frostInitiative;
     }
 
+    
     public void ActionEnemy()
     {
         StartCoroutine(Attack());
@@ -161,43 +198,100 @@ public class Enemy : MonoBehaviour, IPointerClickHandler
     IEnumerator Attack()
     {
         _queueAttack._actualStepInitiative -= battleManager._queueStep;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         if (!_frostbite)
         {
             if (_physicsD)
             {
-                _physicsSpels.ActivateSpels();
+                _physicsSpels.ActivateSpels(); 
+                yield return new WaitForSeconds(_animBufftimer);
+                _anim.SetBool("Buff", false);
+                _physicsSpels.ParticlStop();
+                StartCoroutine(DamageVisualization());
                 character.TakingPhysicsDamage(_pDamage);
             }
 
             if (_magicD)
             {
                 _magicSpels.ActivateSpels();
-                character.TakingPhysicsDamage(_mDamage);
+                yield return new WaitForSeconds(_animBufftimer);
+                _anim.SetBool("Buff", false);
+                _magicSpels.ParticleStop();
+                StartCoroutine(DamageVisualization());
+                yield return new WaitForSeconds(_animAttackTimer);
+                if (_mDamage > 0)
+                    character.TakingPhysicsDamage(_mDamage);
             }
         }
-        StartCoroutine(DamageVisualization());
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(_animAttackTimer);
         _debuffs.DebufEffect();
         _frostbite = false;
-        yield return new WaitForSeconds(0.5f);
+        _anim.enabled = true;
+        DestroyDebufsAnimation();
+        yield return new WaitForSeconds(_animDebuffTimer + 0.5f);
         _queueManager.QueueAttack();
+        battleManager.QueueAttack();        
     }   
 
-   
+    public void AnimBuffTimer(float time)
+    {
+        _animBufftimer = time;
+    }
+    public void AnimDebuffTimer(float time)
+    {
+        _animDebuffTimer = time;
+    }
+
 
     private void Dead()
     {
         if(_heals <= 0)
         {
+            _isDead = true;
+            DestroyDebufsAnimation();
+            _anim.enabled = true;            
+            _anim.SetBool("Dying", true);
+           // battleManager.listEnemy.Remove(gameObject);
+            battleManager.actualQueueAttack.Remove(_queueAttack);
+            _queueManager._queueAttacks.Remove(_queueAttack);
             battleManager.DeadEnemy();
-            Destroy(gameObject, 0.5f);
         }
     }
+    private void Destroy()
+    {
+        Destroy(gameObject, 5f);
+    }
+
     private void OnDestroy()
     {
+        DestroyDebufsAnimation();        
+        BattleManager.destroyEnemy -= Destroy;
         battleManager.listEnemy.Remove(gameObject);
-        battleManager.actualQueueAttack.Remove(_queueAttack);
-        _queueManager._queueAttacks.Remove(_queueAttack);
     }
+
+   public void AnimIdleStop()
+    {
+        _anim.enabled = false;
+    }
+
+    public void DebufsAnimation(GameObject gameObject, bool add)
+    {
+        if (add)
+            _debufsAnimation.Add(gameObject);
+        else
+            _debufsAnimation.Remove(gameObject);
+    }
+
+    private void DestroyDebufsAnimation()
+    {
+        if (_debufsAnimation.Count > 0)
+        {
+            foreach (var d in _debufsAnimation)
+            {
+                if (d.GetComponent<IceChainsAnimation>().IceChains())
+                    d.GetComponent<IceChainsAnimation>().Destroy();
+            }
+        }
+    }
+    
 }

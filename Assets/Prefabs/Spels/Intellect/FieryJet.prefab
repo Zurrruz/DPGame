@@ -141,6 +141,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _damage: 9
   _scorch: 6
+  _fireBall: 0
+  _fireJet: 1
 --- !u!114 &-7625777151152344750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,7 +169,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _name: "\u041E\u0433\u043D\u0435\u043D\u0430\u044F \u0441\u0442\u0440\u0443\u044F "
-  _discription: "*\u041A\u0414-4*. \u041D\u0430\u043D\u043E\u0441\u0438\u0442 \u0446\u0435\u043B\u0438
-    9 \u0435\u0434\u0438\u043D\u0438\u0446 \u0443\u0440\u043E\u043D\u0430+\u0438\u043D\u0442\u0435\u043B\u0435\u043A\u0442.
-    \u041E\u0436\u043E\u0433 6"
+  _discription: "\u0423\u0440\u043E\u043D"
+  _discriptionEffect: "\u041E\u0436\u043E\u0433"
+  _damage: 9
+  _damageEffect: 6
+  magicSpell: 1
   _startTimer: 1

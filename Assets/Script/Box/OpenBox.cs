@@ -92,11 +92,16 @@ public class OpenBox : MonoBehaviour, IPointerClickHandler
     public void TakeItemVeapon()
     {
         take();
-        uiPlayerButton.SetActiveChooseItem(false);
-        cameraPlayer();
-        Dice.thereIsAMove = false;
+            //uiPlayerButton.SetActiveChooseItem(false);
+        //cameraPlayer();
+        //Dice.thereIsAMove = false;
         MainCameraController.inBoxRoom = false;
         MainCameraController.inArenaRoom = false;
+    }
+
+    public void NextLvl()
+    {
+        
     }
 
     public void AddItemWeapon()

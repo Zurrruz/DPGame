@@ -16,7 +16,7 @@ public class CellBox : MonoBehaviour
 
     private void Awake()
     {
-        openBox = GameObject.FindGameObjectWithTag("OpenChest").GetComponent<OpenBox>();
+        //openBox = GameObject.FindGameObjectWithTag("OpenChest").GetComponent<OpenBox>();
     }
 
     private void Start()

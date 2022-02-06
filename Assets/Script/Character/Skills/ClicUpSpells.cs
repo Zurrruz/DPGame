@@ -51,8 +51,10 @@ public class ClicUpSpells : MonoBehaviour, IPointerClickHandler, IPointerEnterHa
 
     private void AddSpell()
     {
-        if(_onPointer)
+        if (_onPointer)
+        {
             upSpell(_spell);
+        }
         DestroySpell();
     }
 

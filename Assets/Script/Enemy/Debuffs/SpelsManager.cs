@@ -14,7 +14,10 @@ public class SpelsManager : MonoBehaviour
     public static float damageEffect;
 
     public static bool spelIsActive;
-    
+    public static float timeFlySpell;
+    public List<float> timeFlySpelToEnemy;
+
+    public ManagerAnimationSpells managerAnimationSpells;
     public BattleManager battleManager;
     public Character character;
     public static float weakeningPhysicsDamage;
@@ -28,13 +31,17 @@ public class SpelsManager : MonoBehaviour
 
     public static bool scorchIsActive;
     public static float scorch;
+    public static bool fireBall;
+    public static bool fireJet;
 
     public static bool frostbiteIsActive;
     public static float frostbite;
     public static bool frostStorm;
+    public static bool frostThorn;
 
     public static float staticElectricity;
     public static bool lightningBolt;
+    public static bool electricalDischarge;
     public static bool electricSpell;
 
     private void Start()
@@ -70,6 +77,10 @@ public class SpelsManager : MonoBehaviour
         frostStorm = false;
         electricSpell = false;
         lightningBolt = false;
+        electricalDischarge = false;
+        frostThorn = false;
+        fireBall = false;
+        fireJet = false;
 
         cooldownTimerSpells();
     }
@@ -102,16 +113,32 @@ public class SpelsManager : MonoBehaviour
 
                 else if (i == 0)
                 {
-                    battleManager.listEnemy[i + 1].GetComponent<Enemy>().TakingDebufsDamage(character.strength);
+                    if (!battleManager.listEnemy[i + 1].GetComponent<Enemy>()._isDead)
+                    {
+                        battleManager.listEnemy[i + 1].GetComponent<Enemy>().TakingDebufsDamage(damageEffect);
+                        managerAnimationSpells.SweepingBlowAnimation(i + 1);
+                    }
                 }
                 else if (i == battleManager.listEnemy.Count - 1)
                 {
-                    battleManager.listEnemy[i - 1].GetComponent<Enemy>().TakingDebufsDamage(character.strength);
+                    if (!battleManager.listEnemy[i - 1].GetComponent<Enemy>()._isDead)
+                    {
+                        battleManager.listEnemy[i - 1].GetComponent<Enemy>().TakingDebufsDamage(damageEffect);
+                        managerAnimationSpells.SweepingBlowAnimation(i - 1);
+                    }
                 }
                 else
                 {
-                    battleManager.listEnemy[i + 1].GetComponent<Enemy>().TakingDebufsDamage(character.strength);
-                    battleManager.listEnemy[i - 1].GetComponent<Enemy>().TakingDebufsDamage(character.strength);
+                    if (!battleManager.listEnemy[i + 1].GetComponent<Enemy>()._isDead)
+                    { 
+                        battleManager.listEnemy[i + 1].GetComponent<Enemy>().TakingDebufsDamage(damageEffect);
+                        managerAnimationSpells.SweepingBlowAnimation(i + 1);
+                    }
+                    if (!battleManager.listEnemy[i - 1].GetComponent<Enemy>()._isDead)
+                    {
+                        battleManager.listEnemy[i - 1].GetComponent<Enemy>().TakingDebufsDamage(damageEffect);
+                        managerAnimationSpells.SweepingBlowAnimation(i - 1);
+                    }             
                 }
             }
         }
@@ -131,7 +158,10 @@ public class SpelsManager : MonoBehaviour
     {
         foreach (var i in battleManager.listEnemy)
         {
-            i.GetComponent<Enemy>().TakingDebufsDamage(character.intellect);
+            if (!i.GetComponent<Enemy>().isTarget && !i.GetComponent<Enemy>()._isDead)
+            {
+                i.GetComponent<Enemy>().TakingDebufsDamage(character.intellect);                
+            }
             i.GetComponent<Debuffs>().Frostbite();
         }       
     }
@@ -193,7 +223,7 @@ public class SpelsManager : MonoBehaviour
         List<GameObject> enemyNotStaticElectric = new List<GameObject>();
         foreach (var i in battleManager.listEnemy)
         {            
-            if( i != o)
+            if( i != o && !i.GetComponent<Enemy>()._isDead)
             {
                 enemyNotStaticElectric.Add(i);
             }
@@ -215,5 +245,16 @@ public class SpelsManager : MonoBehaviour
         }
         yield return null;
     }
-   
+
+    public float TimFlySpell()
+    {
+        for (int i = 0; i < battleManager.listEnemy.Count; i++)
+        {
+            if (battleManager.listEnemy[i].GetComponent<Enemy>().isTarget)
+            {
+                timeFlySpell = timeFlySpelToEnemy[i];
+            }
+        }
+        return timeFlySpell;
+    }
 }

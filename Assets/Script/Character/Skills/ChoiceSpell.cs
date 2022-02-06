@@ -26,7 +26,7 @@ public class ChoiceSpell : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (_cd.CooldownTimer() <= 0)
+        if (_cd.CooldownTimer() <= 0 && Character.isActive)
         {
             GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
             choiceSpellColor();

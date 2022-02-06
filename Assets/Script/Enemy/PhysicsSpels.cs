@@ -25,8 +25,21 @@ public class PhysicsSpels : MonoBehaviour
     [SerializeField, Tooltip("Прибавка урона при срабатывании пассивной способности")]
     private float _addPassiveDamage;
 
+    private Animator _anim;
+    [SerializeField]
+    private float _animBuffTimer;
+    [SerializeField]
+    private float _animAttacTimer;
+    [SerializeField]
+    private ParticleSystem _buffAddDamage;
+
+
+    private SpriteRenderer _sr;
+
     private void Start()
     {
+        _sr = GetComponent<SpriteRenderer>();
+        _anim = GetComponent<Animator>();
         enemy = GetComponent<Enemy>();
         _kdAddDamage = 0;
         _addDamage = addDamage;
@@ -45,16 +58,29 @@ public class PhysicsSpels : MonoBehaviour
         ShamanBufsDamage(_shamanDamage, true);
     }
 
+    public void ParticlStop()
+    {
+        _buffAddDamage.Stop();
+    }
+    public float AnimAttackTimer()
+    {
+        return _animAttacTimer;
+    }
+
     private void IncreasedDamage()
     {
         if (_kdAddDamage <= 0)
         {
+            enemy.AnimBuffTimer(_animBuffTimer);
+            _anim.SetBool("Buff", true);
+            _buffAddDamage.Play(true);
             enemy._pDamage += _addDamage;
             _kdAddDamage = kdAddDamage;
             _iDamage = true;
         }
         else if (_iDamage)
         {
+            enemy.AnimBuffTimer(0f);
             if (_addDamage > 1)
             {
                 enemy._pDamage -= 2;
@@ -85,6 +111,7 @@ public class PhysicsSpels : MonoBehaviour
             float h = _heals / 3;
             if (enemy._heals <= h)
             {
+                _sr.color = new Color(1, 0.6f, 0.6f, 1);
                 enemy._pDamage += _addPassiveDamage;
                 _pasiveIncreasedDamageActive = true;
             }
@@ -103,5 +130,16 @@ public class PhysicsSpels : MonoBehaviour
             enemy._pDamage -= 2;
             _shamanDamage -= 2;
         }
+    }
+
+    public void OnOffParticleBuff()
+    {
+        StartCoroutine(OnOff());
+    }
+    IEnumerator OnOff()
+    {
+        _buffAddDamage.Play();
+        yield return new WaitForSeconds(_animBuffTimer);
+        _buffAddDamage.Stop();
     }
 }

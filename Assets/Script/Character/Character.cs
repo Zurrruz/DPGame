@@ -8,7 +8,9 @@ public class Character : MonoBehaviour
     [Header("Основные характеристики")]
     public float agility;
     public float strength;
+    public static float strenghtBonusEffect;
     public float intellect;
+    public static float intellectBonusEffectSpell;
     public static float intellectSpellDamage;
     public float baseHeals;
     public float _heals;
@@ -39,6 +41,13 @@ public class Character : MonoBehaviour
     [SerializeField]
     private GameObject _gameOverBox;
 
+    public GameObject _player;
+    private Animator _anim;
+    [SerializeField]
+    private float _animAttackTimer;
+    [SerializeField]
+    private float _animTakingDamage;
+
     private SpriteRenderer _sr;
     private QueueAttack queueAttack;
     private QueueManager _queueManager;
@@ -55,6 +64,7 @@ public class Character : MonoBehaviour
     }
     private void Start()
     {
+        _anim = _player.GetComponent<Animator>();
         _sr = GetComponent<SpriteRenderer>();
         _queueManager._queueAttacks.Add(queueAttack);
         battleManager.actualQueueAttack.Add(queueAttack);
@@ -64,14 +74,18 @@ public class Character : MonoBehaviour
         magicDamage = baseMDamage;
         magicEffectDamage = baseMDamage;
         _gameOverBox.SetActive(false);
+
+        intellectBonusEffectSpell = intellect;
     }
 
     public void Stats()
     {
-        _heals = strength * 10 + baseHeals;
+        _heals = strength * 3 + baseHeals;
         _initiative = basicinitiative + agility;
-        _critical = agility;
-        _dodge = agility;
+        //_critical = agility;
+        _dodge = agility * 2 + 20;
+        intellectBonusEffectSpell = intellect;
+        strenghtBonusEffect = strength;
 
         _mana = intellect;
         _resist = intellect;
@@ -91,39 +105,60 @@ public class Character : MonoBehaviour
         if(d > _dodge)
         {
             _heals -= pDamage;
-            StartCoroutine(TakingDamageVisualization());
+            StartCoroutine(TakingDamageAnimation());
         }
         else
         {
+            StartCoroutine(BlockAnimanion());
             Debug.Log("Вы улонились от атаки");
         }
         if(_heals <= 0)
         {
             _gameOverBox.SetActive(true);
+            _anim.SetBool("Dying", true);
         }
+    }
+    IEnumerator BlockAnimanion()
+    {
+        _anim.SetBool("Block", true);
+        yield return new WaitForSeconds(1.3f);
+        _anim.SetBool("Block", false);
     }
     public void TakingMagicDamage(float mDamage)
     {
         _heals -= mDamage;
-        StartCoroutine(TakingDamageVisualization());
+        StartCoroutine(TakingDamageAnimation());
         if (_heals <= 0)
         {
             _gameOverBox.SetActive(true);
-
+            _anim.SetBool("Dying", true);
         }
     }
 
-        public float DealtDamageEnemy()
+    IEnumerator TakingDamageAnimation()
+    {
+        _anim.SetBool("TakingDamage", true);
+        yield return new WaitForSeconds(_animTakingDamage);
+        _anim.SetBool("TakingDamage", false);
+    }
+
+    public static bool spell;
+    public float DealtDamageEnemy()
     {
         if (BattleManager.physicsDamage)
         {
             float c = Random.Range(0, 101);
-            if(c <= _critical)
+            if (c <= _critical)
             {
                 _damageDealt = (physicsDamage + spellsDamage) * _increasedCriticalDamage;
             }
             else
-                _damageDealt = physicsDamage + spellsDamage;
+            {
+                if (!spell)
+                    _damageDealt = physicsDamage;
+                else
+                    _damageDealt = spellsDamage + strength;
+            }
         }
         else if (BattleManager.magicDamage)
         {
@@ -133,19 +168,32 @@ public class Character : MonoBehaviour
                 _damageDealt = (magicDamage + spellsDamage) * _increasedCriticalDamage;
             }
             else
-                _damageDealt = magicDamage + spellsDamage;
+            {
+                if (!spell)
+                    _damageDealt = magicDamage;
+                else
+                    _damageDealt = spellsDamage + intellect;
+            }
         }
+        
         queueAttack._actualStepInitiative -= battleManager._queueStep;
         //_queueManager.QueueAttack();
         //battleManager.QueueAttack();
         cooldownTimer();
         return _damageDealt;
+    
     }
 
-    IEnumerator TakingDamageVisualization()
+    public void AnimationAttackOn()
     {
-        _sr.color = new Color(0.8f, 0f, 0f);
-        yield return new WaitForSeconds(0.1f);
-        _sr.color = new Color(1f, 1f, 1f);
+        StartCoroutine(AnimationAttack());
     }
+
+    IEnumerator AnimationAttack()
+    {
+        _anim.SetBool("Attack", true);
+        yield return new WaitForSeconds(_animAttackTimer);
+        _anim.SetBool("Attack", false);
+    }
+    
 }

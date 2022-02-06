@@ -16,13 +16,15 @@ public class UIPlayerButton : MonoBehaviour
     private GameObject _pauseMenu;
     private bool _pause;
 
+    public GameObject infoGame;
+
     private void Start()
     {
         PathCell.playerOnTheChest += OpenBox;
         PathCell.fightInTheArena += FightInTheArena;
         _chooseItem.SetActive(false);
         _fightInTheArena.SetActive(false);
-        _StartFight.SetActive(false);
+        //_StartFight.SetActive(false);
     }
 
     private void OpenBox()
@@ -59,7 +61,7 @@ public class UIPlayerButton : MonoBehaviour
 
     public void SetActiveChooseItem(bool set)
     {
-        if(set)
+        if (set)
             _chooseItem.SetActive(true);
         if (!set)
             _chooseItem.SetActive(false);
@@ -76,7 +78,8 @@ public class UIPlayerButton : MonoBehaviour
     
     public void StartFightActiveTrue()
     {
-        _StartFight.SetActive(true);
+        if(BattleManager._nextLel)
+            _StartFight.SetActive(true);
     }
     public void StartFightActiveFalse()
     {
@@ -101,5 +104,10 @@ public class UIPlayerButton : MonoBehaviour
             _pauseMenu.SetActive(false);
             _pause = false;
         }
+    }
+
+    public void SetFalse()
+    {
+        infoGame.SetActive(false);
     }
 }

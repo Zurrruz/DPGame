@@ -29,7 +29,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7396764727816857516}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.73780113, y: 0.7528242, z: 0}
   m_Children: []
@@ -129,6 +129,7 @@ MonoBehaviour:
   _damageEffect: 0
   _staticElectricity: 3
   _lightningBolt: 0
+  _electricalDischarge: 1
 --- !u!114 &7128259918216974184
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,7 +142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 580ddfe5e91790f4b97db8e358294d6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cooldown: 2
+  _cooldown: 1
   _isActive: 0
 --- !u!114 &9217056413661070337
 MonoBehaviour:
@@ -170,8 +171,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: "\u042D\u043B\u0435\u043A\u0442\u0440\u0438\u0447\u0435\u0441\u043A\u0438\u0439
     \u0440\u0430\u0437\u0440\u044F\u0434"
-  _discription: "*\u041A\u0414-1*. \u041D\u0430\u043D\u043E\u0441\u0438\u0442 \u0446\u0435\u043B\u0438
-    3 \u0443\u0440\u043E\u043D\u0430 +\u0438\u043D\u0442\u0435\u043B\u043B\u0435\u043A\u0442.
-    \u0421\u0442\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0435 \u044D\u043B\u0435\u043A\u0442\u0440\u0438\u0447\u0435\u0441\u0442\u0432\u043E
-    3"
+  _discription: "\u0423\u0440\u043E\u043D"
+  _discriptionEffect: "\u0421\u0442\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0435
+    \u044D\u043B\u0435\u043A\u0442\u0440\u0438\u0447\u0435\u0441\u0442\u0432\u043E"
+  _damage: 3
+  _damageEffect: 3
+  magicSpell: 1
   _startTimer: 1

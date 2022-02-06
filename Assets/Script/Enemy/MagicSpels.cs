@@ -13,7 +13,7 @@ public class MagicSpels : MonoBehaviour
     private bool _increasedDamage;
     [SerializeField, Tooltip("Количество урона прибавляемого за баф")]
     private float addDamage;
-    private float _addDamage;
+    public float _addDamage;
     private bool _iDamage;
     [SerializeField, Tooltip("Откат бафа на урон")]
     private int kdAddDamage;
@@ -22,10 +22,23 @@ public class MagicSpels : MonoBehaviour
     [Header("Магический щит")]
     [SerializeField]
     private bool _magicShield;
+    [SerializeField]
+    GameObject _magicShieldAnimation;
     [SerializeField, Tooltip("Сколько урона поглотит щит")]
     private float _absorbDamage;
     [SerializeField, Tooltip("При каком количестве хп активируется щит")]
     private float _healsActivateShield;
+        
+    private Animator _anim;
+    [Header("Длина анимаций")]
+    [SerializeField]
+    private float _animBuffTimer;
+    [SerializeField]
+    private float _animAttacTimer;
+    [SerializeField]
+    private float _animHealingCasting;
+    [SerializeField]
+    private ParticleSystem _buffAddDamageParticle;
 
     [Header("Усиление другого")]
     [SerializeField]
@@ -40,12 +53,16 @@ public class MagicSpels : MonoBehaviour
     [SerializeField, Tooltip("Количество востанавливаемого здоровья")]
     private float _healing;
     private bool _activeHealing;
+    [SerializeField]
+    private GameObject _healingCast;
 
-
+    public delegate void MagicShieldActivate(Transform transform);
+    public static event MagicShieldActivate magicShieldActivate;
 
     // Start is called before the first frame update
     void Start()
     {
+        _anim = GetComponent<Animator>();
         battleManager = GameObject.Find("Arena").GetComponent<BattleManager>();
         enemy = GetComponent<Enemy>();
         _kdAddDamage = 0;
@@ -63,21 +80,34 @@ public class MagicSpels : MonoBehaviour
 
         _kdDamageShaman--;
         if (_shaman)
-            IncreasedWariorMage();
+            StartCoroutine(IncreasedWariorMage());
 
         ShamanBufsDamage(_shamanDamage, true);
     }
 
+    public float AnimAttackTimer()
+    {
+        return _animAttacTimer;
+    }
+    public void ParticleStop()
+    {
+        if(!_shaman)
+            _buffAddDamageParticle.Stop();
+    }
     private void IncreasedDamage()
     {
         if (_kdAddDamage <= 0)
         {
+            _anim.SetBool("Buff", true);
+            enemy.AnimBuffTimer(_animBuffTimer);
+            _buffAddDamageParticle.Play(true);
             enemy._mDamage += _addDamage;
             _kdAddDamage = kdAddDamage;
             _iDamage = true;
         }
         else if (_iDamage)
         {
+            enemy.AnimBuffTimer(0);
             if (_addDamage > 1)
             {
                 enemy._mDamage -= 2;
@@ -90,7 +120,7 @@ public class MagicSpels : MonoBehaviour
             }
             else if (_addDamage == 1)
             {
-                enemy._pDamage -= 1;
+                enemy._mDamage -= 1;
                 _addDamage -= 1;
                 if (_addDamage == 0)
                 {
@@ -107,6 +137,7 @@ public class MagicSpels : MonoBehaviour
         {
             enemy._magicShield = _absorbDamage;
             _magicShield = false;
+            Instantiate(_magicShieldAnimation, transform);
         }
     }
 
@@ -124,14 +155,19 @@ public class MagicSpels : MonoBehaviour
         }
     }
 
-    private void IncreasedWariorMage()
+    private IEnumerator IncreasedWariorMage()
     {
-        foreach (var enemy in battleManager.listEnemy)
+        foreach (var e in battleManager.listEnemy)
         {
-            if (enemy.GetComponent<Enemy>()._heals <= enemy.GetComponent<Enemy>().heals / 2)
+            enemy.AnimBuffTimer(_animHealingCasting);
+            if (e.GetComponent<Enemy>()._heals <= e.GetComponent<Enemy>().heals / 2 && !e.GetComponent<Enemy>()._isDead)
             {
-                enemy.GetComponent<Enemy>()._heals += _healing;
+                e.GetComponent<Enemy>()._heals += _healing;
                 _activeHealing = true;
+                _anim.SetBool("Healing" ,true);
+                Instantiate(_healingCast, e.transform);
+                yield return new WaitForSeconds(_animHealingCasting);
+                _anim.SetBool("Healing", false);
                 break;
             }
             else
@@ -142,16 +178,17 @@ public class MagicSpels : MonoBehaviour
         List<GameObject> _mage = new List<GameObject>();
         if (!_activeHealing)
         {
+            enemy.AnimBuffTimer(_animBuffTimer);
             if (_kdDamageShaman <= 0)
             {
                 int r = Random.Range(1, 3);
                 foreach (var e in battleManager.listEnemy)
                 {
-                    if (e.GetComponent<Enemy>()._warior)
+                    if (e.GetComponent<Enemy>()._warior && !e.GetComponent<Enemy>()._isDead)
                     {
                         _warior.Add(e);
                     }
-                    else if (e.GetComponent<Enemy>()._mage && !e.GetComponent<MagicSpels>()._shaman)
+                    else if (e.GetComponent<Enemy>()._mage && !e.GetComponent<MagicSpels>()._shaman && !e.GetComponent<Enemy>()._isDead)
                     {
                         _mage.Add(e);
                     }
@@ -164,28 +201,31 @@ public class MagicSpels : MonoBehaviour
                     if (_warior.Count != 0)
                     {
                         _warior[w].GetComponent<PhysicsSpels>().ShamanBufsDamage(_addDamageWarior, false);
-                        Debug.Log("Усилил воина");
+                        _warior[w].GetComponent<PhysicsSpels>().OnOffParticleBuff(); 
                     }
                     else if (_mage.Count != 0)
                     {
-                        _mage[w].GetComponent<MagicSpels>().ShamanBufsDamage(_addDamageWarior, false);
-                        Debug.Log("Усилил мага");
+                        _mage[m].GetComponent<MagicSpels>().ShamanBufsDamage(_addDamageWarior, false);
+                        _mage[m].GetComponent<MagicSpels>().OnOffParticleBuff();
                     }
                 }
                 else if (r == 2)
                 {
                     if (_mage.Count != 0)
                     {
-                        _mage[w].GetComponent<MagicSpels>().ShamanBufsDamage(_addDamageWarior, false);
-                        Debug.Log("Усилил мага");
+                        _mage[m].GetComponent<MagicSpels>().ShamanBufsDamage(_addDamageWarior, false);
+                        _mage[m].GetComponent<MagicSpels>().OnOffParticleBuff();
                     }
                     else if (_warior.Count != 0)
                     {
                         _warior[w].GetComponent<PhysicsSpels>().ShamanBufsDamage(_addDamageWarior, false);
-                        Debug.Log("Усилил воина");
+                        _warior[w].GetComponent<PhysicsSpels>().OnOffParticleBuff();
                     }
                 }
                 _kdDamageShaman = kdAddDamageShaman;
+                _anim.SetBool("Buff", true);
+                yield return new WaitForSeconds(_animBuffTimer);
+                _anim.SetBool("Buff", false);
             }
         }        
     }
@@ -193,5 +233,16 @@ public class MagicSpels : MonoBehaviour
     public bool IsShaman()
     {
         return _shaman;
+    }
+
+    public void OnOffParticleBuff()
+    {
+        StartCoroutine(OnOff());
+    }
+     IEnumerator OnOff()
+    {
+        _buffAddDamageParticle.Play();
+        yield return new WaitForSeconds(_animBuffTimer);
+        _buffAddDamageParticle.Stop();
     }
 }

@@ -26,7 +26,7 @@ public class FuriousTwoo : MonoBehaviour, IPointerClickHandler
             BattleManager.physicsDamage = true;
             BattleManager.magicDamage = false;
             StartCoroutine(Spels());
-
+            Character.spell = true;
         }
     }
 

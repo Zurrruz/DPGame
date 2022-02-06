@@ -23,10 +23,11 @@ public class AimedStrike : MonoBehaviour, IPointerClickHandler
         {
             SpelsManager.EffectActiveFalse();
             Character.spellsDamage = _damage;
-            SpelsManager.weakeningPhysicsDamage = _weakening;
+            SpelsManager.weakeningPhysicsDamage = _weakening + Mathf.Floor( Character.intellectBonusEffectSpell / 2);
             StartCoroutine(Spels());
             BattleManager.physicsDamage = true;
             BattleManager.magicDamage = false;
+            Character.spell = true;
         }
     }
 

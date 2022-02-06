@@ -18,6 +18,8 @@ public class BattleManager : MonoBehaviour
 
     public bool _step;
 
+    public float _timer;
+
     private bool _rewardLow;
     private bool _rewardMedium;
     private bool _rewardHard;
@@ -36,15 +38,25 @@ public class BattleManager : MonoBehaviour
     public delegate void AddEnemy();
     public static event AddEnemy addEnemy;
 
+    public delegate void DestroyEnemy();
+    public static event DestroyEnemy destroyEnemy;
+
     public delegate void ResetCooldownSpell();
     public static event ResetCooldownSpell resetCooldownSpell;
 
     private void Start()
     {
         _rewardForVictory = GetComponent<RewardForVictory>();
-        _canvasInfoArena.SetActive(false);
+        //_canvasInfoArena.SetActive(false);
+        SpawnEnemyToTheArena();
+        PlayerPrefs.SetInt("Lvl", _countEnemy);
+        OpenBox.take += NextLvl;
     }
 
+    private void OnDestroy()
+    {
+        OpenBox.take -= NextLvl;
+    }
 
     public void QueueAttack()
     {
@@ -76,21 +88,21 @@ public class BattleManager : MonoBehaviour
                 if (actualQueueAttack[0]._character)
                 {
                     Character.isActive = true;
-                    Debug.Log("Ход игрока");
                     break;
                 }
                 else if(actualQueueAttack[0]._enemy)
                 {
                     actualQueueAttack[0].GetComponent<Enemy>().ActionEnemy();
-                    Debug.Log("Ход противника");
-                    yield return new WaitForSeconds(1.5f);
+                    //yield return new WaitForSeconds(actualQueueAttack[0].GetComponent<Enemy>().DelayBetweenEnemies());
+                    //queueManager.QueueAttack();
+                    break;
                 }
             }
             else
             {
                 AddInitiayive();
-            }           
-        }
+            }
+        }        yield return null;
     }
 
 
@@ -103,7 +115,7 @@ public class BattleManager : MonoBehaviour
     {
         if (enemy.Count > 0)
         {
-            enemy.Clear();
+            // enemy.Clear();
             for (int i = 0; i < actualQueueAttack.Count; i++)
             {
                 if (actualQueueAttack[i]._enemy)
@@ -115,7 +127,7 @@ public class BattleManager : MonoBehaviour
                     queueManager._queueAttacks.RemoveAt(i);
             }
         }
-        addEnemy();
+        //addEnemy();
         StartCoroutine(SpawnEnemy());
     }
 
@@ -128,17 +140,24 @@ public class BattleManager : MonoBehaviour
         _countEnemy = c;
     }
 
+    bool _shamanIsOn;
+    int r;
     IEnumerator SpawnEnemy()
     {
-        yield return new WaitForSeconds(1f);
-        _canvasInfoArena.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        //_canvasInfoArena.SetActive(true);
         for (int i = 0; i < _countEnemy; i++)
         {
-            int r = Random.Range(0, enemy.Count);
+            if(_countEnemy == 1 || _shamanIsOn)
+                r = Random.Range(0, enemy.Count - 1);
+            else
+                r = Random.Range(0, enemy.Count);
+
             Instantiate(enemy[r], _spawnEnemy[i]);
             if (enemy[r].GetComponent<MagicSpels>().IsShaman())
             {
-                enemy.RemoveAt(r);
+                //enemy.RemoveAt(r);
+                _shamanIsOn = true;
             }
         }
     }
@@ -152,15 +171,57 @@ public class BattleManager : MonoBehaviour
 
     public void DeadEnemy()
     {
+        StartCoroutine(DeaEnemyCor());
+    }
+    public GameObject win; // удалить после приема ДП
+    IEnumerator DeaEnemyCor()
+    {
         _countEnemy--;
-        if(_countEnemy <=0)
+        if (_countEnemy <= 0)
         {
-            _rewardForVictory.ShowRewardLow(_rewardLow, _rewardMedium, _rewardHard);
-            _takeItemButton.SetActive(true);
-            _canvasInfoArena.SetActive(false);
+            if (PlayerPrefs.GetInt("Lvl") == 6)
+            {
+                win.SetActive(true);
+            }
+            else
+            {
+                yield return new WaitForSeconds(3f);
+                _rewardForVictory.ShowRewardLow(true, false, false);
+                _takeItemButton.SetActive(true);
+                character.Stats();
+                //_canvasInfoArena.SetActive(false);
+                destroyEnemy();
+            }
         }
-        QueueAttack();
-        queueManager.QueueAttack();
+        else
+        {
+            QueueAttack();
+            queueManager.QueueAttack();
+        }
+    }
+
+    public GameObject takeItemButton; // Удалить просле приема диплома.
+    public static  bool _nextLel;
+    private void NextLvl()
+    {
+        StartCoroutine(NextLvlCor());
+    }
+    IEnumerator NextLvlCor()
+    {        
+        if (_nextLel)
+        {
+            _countEnemy = PlayerPrefs.GetInt("Lvl") + 1;
+            SpawnEnemyToTheArena();
+            PlayerPrefs.SetInt("Lvl", _countEnemy);
+            _nextLel = false;
+            takeItemButton.SetActive(false);
+        }
+        else
+        {
+            yield return new WaitForSeconds(0.5f);
+            _rewardForVictory.ShowRewardLow(false, true, false);
+            _nextLel = true;
+        }
     }
 
     public void ResetCooldown()

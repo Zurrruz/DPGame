@@ -30,7 +30,7 @@ public sealed class MainCameraController : MonoBehaviour
         _target = _player;
         _cam = GetComponent<Camera>();
         OpenBox.cameraPlayer += PositionPlayer;
-        transform.position = new Vector3(0, 2.7f, transform.position.z);
+        //transform.position = new Vector3(0, 2.7f, transform.position.z);
     }
     private void OnDestroy()
     {
